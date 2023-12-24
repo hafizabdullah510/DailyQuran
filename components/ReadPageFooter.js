@@ -1,109 +1,162 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MyIcon from "./MyIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-
-const ReadPageFooter = ({
-  readingState,
-  setReadingState,
-  surahData,
-  previousSurahVersesCount,
-}) => {
-  const { verses_count } = surahData;
-  const [ayahState, setAyahState] = useState(readingState.ayah_index);
-
-  const goBack = () => {
-    console.log(readingState);
-    if (readingState.current_verse_number > 1) {
-      setReadingState({
-        ...readingState,
-        ayah_index: readingState.ayah_index - 1,
-        current_verse_number: readingState.current_verse_number - 1,
-      });
-    } else {
-      if (readingState.chapter_number == 1) {
-        setReadingState({
-          ...readingState,
-          ayah_index: 6235,
-          chapter_number: 114,
-          current_verse_number: 6,
-        });
+import { useNavigation } from "@react-navigation/native";
+import { useAppContext } from "../context/AppContext";
+import { useAPIContext } from "../context/APIcontext";
+const ReadPageFooter = ({ quranData, params, timeSpent }) => {
+  const navigation = useNavigation();
+  const {
+    chapterIndex,
+    randomChapterIndex,
+    ayahIndex,
+    randomAyahIndex,
+    setChapterIndex,
+    setRandomChapterIndex,
+    setAyahIndex,
+    setRandomAyahIndex,
+    saveState,
+    formattedDate,
+    handleScreenTime,
+    filterAcheivements,
+  } = useAppContext();
+  const { playSound, soundPlaying } = useAPIContext();
+  const goForward = () => {
+    if (soundPlaying) {
+      playSound();
+    }
+    if (params) {
+      if (
+        quranData[randomChapterIndex].ayahs[randomAyahIndex].numberInSurah <
+        quranData[randomChapterIndex].ayahs.length
+      ) {
+        setRandomAyahIndex(randomAyahIndex + 1);
       } else {
-        setReadingState({
-          ...readingState,
-          ayah_index: readingState.ayah_index - 1,
-          chapter_number: readingState.chapter_number - 1,
-          current_verse_number: previousSurahVersesCount,
-        });
+        if (
+          randomChapterIndex === 113 &&
+          quranData[randomChapterIndex].ayahs[randomAyahIndex].numberInSurah ===
+            quranData[randomChapterIndex].ayahs.length
+        ) {
+          setRandomChapterIndex(0);
+          setRandomAyahIndex(0);
+        } else {
+          setRandomChapterIndex(randomChapterIndex + 1);
+          setRandomAyahIndex(0);
+        }
       }
-    }
-  };
-  const goForward = async () => {
-    if (readingState.current_verse_number < verses_count) {
-      setReadingState({
-        ...readingState,
-        current_verse_number: readingState.current_verse_number + 1,
-        verse_read: readingState.verse_read + 1,
-        ayah_index_read: readingState.ayah_index_read + 1,
-        ayah_index: readingState.ayah_index + 1,
-      });
     } else {
-      setReadingState({
-        ...readingState,
-        current_verse_number: 1,
-        verse_read: 1,
-        ayah_index_read:
-          readingState.ayah_index < 6235 ? readingState.ayah_index + 1 : 0,
-        ayah_index:
-          readingState.ayah_index < 6235 ? readingState.ayah_index + 1 : 0,
-        chapter_number:
-          readingState.chapter_number < 114
-            ? readingState.chapter_number + 1
-            : 1,
-        chapter_read:
-          readingState.chapter_read < 114 ? readingState.chapter_read + 1 : 1,
-      });
-    }
-    setAyahState(ayahState + 1);
-  };
-  useEffect(() => {
-    const saveReaderState = async () => {
-      try {
-        const jsonData = JSON.stringify(readingState);
-        await AsyncStorage.setItem("readerState", jsonData);
-      } catch (error) {
-        console.log(error);
+      if (
+        quranData[chapterIndex].ayahs[ayahIndex].numberInSurah <
+        quranData[chapterIndex].ayahs.length
+      ) {
+        setAyahIndex(ayahIndex + 1);
+      } else {
+        if (
+          chapterIndex === 113 &&
+          quranData[chapterIndex].ayahs[ayahIndex].numberInSurah ===
+            quranData[chapterIndex].ayahs.length
+        ) {
+          setChapterIndex(0);
+          setAyahIndex(0);
+        } else {
+          setChapterIndex(chapterIndex + 1);
+          setAyahIndex(0);
+        }
       }
-    };
-    saveReaderState();
-  }, [readingState]);
+    }
+  };
+  const goBack = () => {
+    if (soundPlaying) {
+      playSound();
+    }
+    if (params) {
+      if (
+        quranData[randomChapterIndex].ayahs[randomAyahIndex].numberInSurah > 1
+      ) {
+        setRandomAyahIndex(randomAyahIndex - 1);
+      } else {
+        if (
+          randomChapterIndex === 0 &&
+          quranData[randomChapterIndex].ayahs[randomAyahIndex].numberInSurah ===
+            1
+        ) {
+          setRandomChapterIndex(113);
+          setRandomAyahIndex(quranData[113].ayahs.length - 1);
+        } else {
+          setRandomChapterIndex(randomChapterIndex - 1);
+          setRandomAyahIndex(
+            quranData[randomChapterIndex - 1].ayahs.length - 1
+          );
+        }
+      }
+    } else {
+      if (quranData[chapterIndex].ayahs[ayahIndex].numberInSurah > 1) {
+        setAyahIndex(ayahIndex - 1);
+      } else {
+        if (
+          chapterIndex === 0 &&
+          quranData[chapterIndex].ayahs[ayahIndex].numberInSurah === 1
+        ) {
+          setChapterIndex(113);
+          setAyahIndex(quranData[113].ayahs.length - 1);
+        } else {
+          setChapterIndex(chapterIndex - 1);
+          setAyahIndex(quranData[chapterIndex - 1].ayahs.length - 1);
+        }
+      }
+    }
+  };
+
   return (
     <View style={styles.footer}>
-      <TouchableOpacity
-        onPress={goBack}
-        style={[
-          styles.button,
-          {
-            backgroundColor: "#101010",
-          },
-        ]}
+      <View
+        style={{
+          width: "90%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <MyIcon name="arrow-back" size="32" ionIcon color="#fff" />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.doneBtnText}>I'm Done</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={goForward}
-        style={[
-          styles.button,
-          {
-            backgroundColor: "#fff",
-          },
-        ]}
-      >
-        <MyIcon name="arrow-forward" size="32" ionIcon color="#222" />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={goBack}
+          style={[
+            styles.button,
+            {
+              backgroundColor: "#101010",
+            },
+          ]}
+        >
+          <MyIcon name="arrow-back" size="32" ionIcon color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            const obj = { seconds: timeSpent, date: formattedDate };
+            saveState();
+            handleScreenTime(obj);
+
+            if (soundPlaying) {
+              playSound();
+            }
+            filterAcheivements();
+            navigation.navigate("Home");
+          }}
+        >
+          <Text style={styles.doneBtnText}>I'm Done</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => goForward()}
+          style={[
+            styles.button,
+            {
+              backgroundColor: "#fff",
+            },
+          ]}
+        >
+          <MyIcon name="arrow-forward" size="32" ionIcon color="#222" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -112,23 +165,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#101010",
     height: 96,
     width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 25,
   },
   button: {
     paddingVertical: 8,
-    paddingHorizontal: 30,
+    width: "30%",
     backgroundColor: "#222",
     borderWidth: 1,
     borderColor: "#fff",
     borderRadius: 10,
+    alignItems: "center",
   },
   doneBtnText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

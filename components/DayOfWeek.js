@@ -21,6 +21,7 @@ const DayOfWeek = () => {
         numColumns={7}
         alwaysBounceVertical={false}
         columnWrapperStyle={{ justifyContent: "space-between" }}
+        style={{ width: "100%" }}
         renderItem={({ item }) => (
           <View
             style={[
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#404040",
+    marginTop: 10,
   },
   dayItem: {
     height: 40,
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%",
+    borderRadius: 50,
     borderWidth: 1,
   },
   dayText: {

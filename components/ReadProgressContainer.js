@@ -1,7 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 import MyText from "./MyText";
-const ReadProgressContainer = ({ data }) => {
+import { useAppContext } from "../context/AppContext";
+
+const ReadProgressContainer = ({ quranData, params }) => {
+  const { chapterIndex, ayahIndex, randomChapterIndex, randomAyahIndex } =
+    useAppContext();
+
   return (
     <View style={styles.container}>
       <Progress.Bar
@@ -14,7 +19,11 @@ const ReadProgressContainer = ({ data }) => {
       <View style={styles.progressInfo}>
         <MyText text="0/5" size="20" color="#fff" weight="bold" />
         <MyText
-          text={`Juz ${data.juz_number} : ${data.total_Juz_verses} verses left`}
+          text={`Juz : ${
+            quranData?.[params ? randomChapterIndex : chapterIndex].ayahs?.[
+              params ? randomAyahIndex : ayahIndex
+            ].juz
+          }`}
           size="20"
           color="#fff"
           weight="400"
@@ -26,8 +35,8 @@ const ReadProgressContainer = ({ data }) => {
 };
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    marginTop: 50,
+    width: "100%",
+    marginTop: 30,
   },
   progressInfo: {
     display: "flex",

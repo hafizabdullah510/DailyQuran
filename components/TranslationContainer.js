@@ -1,34 +1,36 @@
-import { StyleSheet, Text, View } from "react-native";
-import Loading from "./Loading";
-import { ScrollView } from "react-native-gesture-handler";
-const TranslationContainer = ({
-  loading,
-  quranTranslationData,
-  readingState,
-}) => {
+import { StyleSheet, Text, View, ScrollView, StatusBar } from "react-native";
+import { useAppContext } from "../context/AppContext";
+const TranslationContainer = ({ quranData, params }) => {
+  const { chapterIndex, ayahIndex, randomChapterIndex, randomAyahIndex } =
+    useAppContext();
+
   return (
-    <ScrollView style={styles.translationContainer}>
-      {loading ? (
-        <Loading />
-      ) : (
-        <View>
-          <Text style={styles.translation}>
-            {quranTranslationData[readingState.ayah_index]?.text}
-          </Text>
-        </View>
-      )}
-    </ScrollView>
+    <View style={styles.translationContainer}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.translation}>
+          {
+            quranData?.[params ? randomChapterIndex : chapterIndex].ayahs?.[
+              params ? randomAyahIndex : ayahIndex
+            ].translation
+          }
+        </Text>
+      </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
   translationContainer: {
-    width: "90%",
+    width: "100%",
     marginTop: 20,
+    flex: 1,
   },
   translation: {
-    fontSize: 20,
+    fontSize: 24,
     color: "#fff",
-    lineHeight: 40,
+    lineHeight: 50,
     textAlign: "center",
     fontFamily: "urdu-font",
   },

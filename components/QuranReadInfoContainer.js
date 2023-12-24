@@ -1,42 +1,20 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import MyText from "./MyText";
+import { StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import Acheivement from "./Acheivement";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const QuranReadInfoContainer = ({ data }) => {
+const QuranReadInfoContainer = ({ data, headerComponent }) => {
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
-        numColumns={2}
         alwaysBounceVertical={false}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
         contentContainerStyle={{ gap: 20 }}
+        ListHeaderComponent={headerComponent}
+        ListFooterComponent={SafeAreaView}
         renderItem={({ item }) => (
-          <View
-            style={[
-              styles.infoContainer,
-              {
-                borderColor: item.border,
-              },
-            ]}
-          >
-            {item.icon}
-            <MyText
-              size="20"
-              color="#fff"
-              text={item.text}
-              weight="500"
-              marginTop="5%"
-              align="center"
-              capitalize
-            />
-            <MyText
-              size="20"
-              color="#fff"
-              text={item.count}
-              align="center"
-              marginTop="5%"
-              capitalize
-            />
+          <View style={[styles.infoContainer]}>
+            <Acheivement {...item} />
           </View>
         )}
       />
@@ -50,9 +28,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     borderWidth: 1,
-    paddingVertical: 15,
-    borderRadius: 10,
-    width: "48%",
+    width: "90%",
+    alignSelf: "center",
   },
 });
 

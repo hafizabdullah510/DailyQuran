@@ -1,2 +1,10 @@
 export { default as HomeScreen } from "./HomeScreen";
 export { default as QuranReadScreen } from "./QuranReadScreen";
+export { default as GoalScreen } from "./GoalScreen";
+export { default as ReciterScreen } from "./ReciterScreen";
+export { default as FetchScreen } from "./FetchScreen";
+export { default as LoadingScreen } from "./LoadingScreen";
+export { default as Settings } from "./Settings";
+export { default as TafsirScreen } from "./TafsirScreen";
+export { default as MainReadScreen } from "./MainReadScreen";
+export { default as ReadSettings } from "./ReadSettings";

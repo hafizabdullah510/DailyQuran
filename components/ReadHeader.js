@@ -2,10 +2,27 @@ import { StyleSheet, Text, View } from "react-native";
 import MyIcon from "./MyIcon";
 import MyText from "./MyText";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
-const ReadHeader = ({ navigation }) => {
+import { useAppContext } from "../context/AppContext";
+import { useAPIContext } from "../context/APIcontext";
+import { SafeAreaView } from "react-native-safe-area-context";
+const ReadHeader = ({ navigation, formattedTime, timeSpent }) => {
+  const { saveState, formattedDate, handleScreenTime, filterAcheivements } =
+    useAppContext();
+  const { playSound, soundPlaying } = useAPIContext();
+  const handleSave = () => {
+    const obj = { seconds: timeSpent, date: formattedDate };
+    saveState();
+    handleScreenTime(obj);
+    filterAcheivements();
+    if (soundPlaying) {
+      playSound();
+    }
+    navigation.navigate("Home");
+  };
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      <TouchableOpacity onPress={() => handleSave()}>
         <MyIcon name="arrow-back" size="32" ionIcon color="#fff" />
       </TouchableOpacity>
       <View style={styles.statusContainer}>
@@ -19,11 +36,18 @@ const ReadHeader = ({ navigation }) => {
         </View>
         <View style={styles.status}>
           <MyIcon name="time" size="24" ionIcon color="#feb779" />
-          <MyText text="0" color="#fff" size="20" weight="bold" />
+          <MyText text={formattedTime} color="#fff" size="20" weight="bold" />
         </View>
       </View>
-      <MyIcon name="settings-outline" ionIcon size="32" color="#fff" />
-    </View>
+      <TouchableOpacity
+        onPress={() => {
+          saveState();
+          navigation.navigate("ReadSettings");
+        }}
+      >
+        <MyIcon name="settings-outline" ionIcon size="32" color="#fff" />
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -32,7 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "90%",
+    width: "100%",
   },
   statusContainer: {
     display: "flex",

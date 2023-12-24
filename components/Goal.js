@@ -2,18 +2,38 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import MyText from "./MyText";
 import * as Progress from "react-native-progress";
 import { Button } from "react-native-paper";
-
-const Goal = ({ navigation }) => {
+import { useAPIContext } from "../context/APIcontext";
+import { useAppContext } from "../context/AppContext";
+const Goal = ({ navigation, quran }) => {
+  const { chapterIndex, ayahIndex } = useAppContext();
+  const navigateReadScreen = () => {
+    navigation.navigate("ReadScreen");
+  };
   return (
     <View style={styles.goalContainer}>
       <View style={styles.goalHeader}>
         <View style={styles.leftHeader}>
           <MyText text="Goal" size="32" color="#fff" weight="500" />
           <View style={styles.surahInfo}>
-            <MyText text="2" size="16" color="#fff" weight="400" />
-            <MyText text="Al-Baqara" size="16" color="#fff" weight="400" />
+            <MyText
+              text={`${quran?.[chapterIndex].number}` || ""}
+              size="16"
+              color="#fff"
+              weight="400"
+            />
+            <MyText
+              text={`${quran?.[chapterIndex].englishName}` || ""}
+              size="16"
+              color="#fff"
+              weight="400"
+            />
             <MyText text="|" size="16" color="#fff" weight="400" />
-            <MyText text="28/256" size="16" color="#fff" weight="400" />
+            <MyText
+              text={`${quran?.[chapterIndex].ayahs?.[ayahIndex].numberInSurah} / ${quran?.[chapterIndex].ayahs?.length}`}
+              size="16"
+              color="#fff"
+              weight="400"
+            />
           </View>
         </View>
         <MyText text="0%" size="24" color="#fff" weight="bold" />
@@ -37,7 +57,7 @@ const Goal = ({ navigation }) => {
             textColor="#fff"
             labelStyle={{ fontSize: 20 }}
             contentStyle={{ height: 50 }}
-            onPress={() => navigation.navigate("ReadScreen")}
+            onPress={() => navigateReadScreen()}
           >
             Read Quran
           </Button>

@@ -5,15 +5,14 @@ const Navbar = () => {
   return (
     <View style={styles.navbar}>
       <View style={styles.picContainer}>
-        <Image
-          style={styles.navPic}
-          source={require("../assets/profile-pix.jpg")}
-        />
+        <View style={styles.navPic} />
+
         <MyText
-          text="Salam,Hafiz Abdu..."
-          size="24"
+          text="Salam, Hafiz Abd.."
+          size="20"
           weight="bold"
           color="#fff"
+          marginLeft="10"
         />
       </View>
       <View style={styles.streakContainer}>
@@ -33,7 +32,6 @@ const Navbar = () => {
 };
 const styles = StyleSheet.create({
   navbar: {
-    height: 80,
     width: "90%",
     display: "flex",
     flexDirection: "row",
@@ -50,15 +48,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#E4B7E5",
-    padding: 5,
+    padding: 4,
     borderRadius: 8,
   },
   navPic: {
     height: 50,
     width: 50,
-    display: "block",
-    borderRadius: "50%",
-    marginRight: 10,
+    borderRadius: 50,
+    backgroundColor: "#60deb8",
   },
 });
 export default Navbar;

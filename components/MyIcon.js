@@ -17,9 +17,9 @@ const MyIcon = ({
           name={name}
           style={{
             color: color,
-            fontSize: size,
-            marginRight: marginRight,
-            textAlign: center,
+            fontSize: parseInt(size),
+            marginRight: marginRight && parseInt(marginRight),
+            textAlign: center && "center",
           }}
         />
       )}
@@ -28,9 +28,9 @@ const MyIcon = ({
           name={name}
           style={{
             color: color,
-            fontSize: size,
-            marginRight: marginRight,
-            textAlign: center,
+            fontSize: parseInt(size),
+            marginRight: marginRight && parseInt(marginRight),
+            textAlign: center && "center",
           }}
         />
       )}

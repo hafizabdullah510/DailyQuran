@@ -7,15 +7,17 @@ const MyText = ({
   capitalize,
   marginTop,
   align,
+  marginLeft,
 }) => {
   return (
     <Text
       style={{
-        fontSize: size,
+        fontSize: parseInt(size),
         color: color,
         fontWeight: weight,
         textAlign: align,
         marginTop: marginTop,
+        marginLeft: marginLeft && parseInt(marginLeft),
         textTransform: capitalize && "capitalize",
       }}
     >
